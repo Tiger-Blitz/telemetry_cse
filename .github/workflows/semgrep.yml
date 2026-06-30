@@ -28,7 +28,7 @@ jobs:
         # Hint: Checkout is needed so that semgrep can access your repo code
 
       - name: SCANNING        # Options: choose any name you want. This step scans our code. 
-        run: semgrep scan --sarif --sarif-output=semgrep.sarif || true          # Options: 
+        run: semgrep scan --sarif --sarif-output=semgrep.sarif --error          # Options: 
                                      # semgrep scan --sarif --sarif-output=semgrep.sarif --error
                                      # semgrep scan --sarif --sarif-output=semgrep.sarif || true 
         # Hint: --error enables blocking mode, which means that the workflow will fail if security issues are found.
