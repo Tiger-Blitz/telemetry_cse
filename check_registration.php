@@ -16,14 +16,25 @@ else{
     $username = $_POST['username'];
     $password = $_POST['pass'];
 
+    $sql1 = "SELECT users_username, users_password FROM users WHERE users_username = ? AND users_password = ?";
+    $stmt1 = mysqli_prepare($connection, $sql1);
+    if ($stmt1) {
+        mysqli_stmt_bind_param($stmt1, 'ss', $username, $password);
+        mysqli_stmt_execute($stmt1);
+        $result1 = mysqli_stmt_get_result($stmt1);
+    } else {
+        die(mysqli_error($connection));
+    }
 
-    $sql1 = "SELECT users_username, users_password FROM users WHERE users_username = '{$username}' AND users_password = '{$password}'";
-    $sql2 = "INSERT INTO users (users_username, users_password) VALUES ('$username', '$password')";
+    $sql2 = "INSERT INTO users (users_username, users_password) VALUES (?, ?)";
+    $stmt2 = mysqli_prepare($connection, $sql2);
+    if (!$stmt2) {
+        die(mysqli_error($connection));
+    }
+    mysqli_stmt_bind_param($stmt2, 'ss', $username, $password);
 
-    $result1 = mysqli_query ($connection, $sql1) or die (mysqli_error ($connection));
-
-    if (mysqli_num_rows ($result1) == 0){
-        if (mysqli_query ($connection, $sql2)){
+    if (mysqli_num_rows($result1) == 0){
+        if (mysqli_stmt_execute($stmt2)){
             include 'includes/new_registration.php';
         }
         else{
